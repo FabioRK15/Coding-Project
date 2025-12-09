@@ -1,6 +1,5 @@
 from ui.create_habit import build_create_section
 from ui.logging import build_logging_section
-from ui.dashboard import build_calendar_section, build_tree_dashboard_section
 import flet as ft
 
 
@@ -12,6 +11,7 @@ def main(page: ft.Page):
     state = {
         "page": page,
         "habits": [],
+        "selected_date": None,
         "controls": {},
         "update_log_options": lambda: None,
         "refresh_habit_list": lambda: None,
@@ -47,7 +47,6 @@ def main(page: ft.Page):
                 ft.ElevatedButton("Create Habit", on_click=lambda _: page.go("/create")),
                 ft.ElevatedButton("Daily Logging", on_click=lambda _: page.go("/log")),
                 ft.ElevatedButton("Streak Overview", on_click=lambda _: page.go("/streaks")),
-                ft.ElevatedButton("Calendar", on_click=lambda _: page.go("/calendar")),
                 ft.ElevatedButton("Habit Tree Dashboard", on_click=lambda _: page.go("/tree")),
             ]
         )
@@ -97,25 +96,7 @@ def main(page: ft.Page):
             ]
         )
 
-    def calendar_view():
-        cal = build_calendar_section(state)
-        return ft.View(
-            route="/calendar",
-            controls=[
-                ft.ElevatedButton("\u2190 Back", on_click=lambda _: page.go("/")),
-                cal
-            ]
-        )
-
-    def tree_view():
-        tree = build_tree_dashboard_section(state)
-        return ft.View(
-            route="/tree",
-            controls=[
-                ft.ElevatedButton("\u2190 Back", on_click=lambda _: page.go("/")),
-                tree
-            ]
-        )
+    
 
     # ===== ROUTING =====
 
@@ -130,10 +111,6 @@ def main(page: ft.Page):
             page.views.append(logging_view())
         elif page.route == "/streaks":
             page.views.append(streak_view())
-        elif page.route == "/calendar":
-            page.views.append(calendar_view())
-        elif page.route == "/tree":
-            page.views.append(tree_view())
         else:
             page.views.append(home_view())
 
